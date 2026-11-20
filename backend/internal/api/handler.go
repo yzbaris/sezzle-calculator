@@ -30,7 +30,7 @@ type errorMessage struct {
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/v1/calculate", handleCalculate)
-	mux.HandleFunc("POST /healthz", handleHealth)
+	mux.HandleFunc("GET /healthz", handleHealth)
 	return mux
 }
 
