@@ -42,7 +42,7 @@ func handleCalculate(w http.ResponseWriter, r *http.Request) {
 
 	var req *calculateRequest
 	if err := dec.Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid JSON body "+err.Error())
+		writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid JSON body: "+err.Error())
 		return
 	}
 

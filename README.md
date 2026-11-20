@@ -12,7 +12,7 @@ make docker-run        # or: docker build -t sezzle-calculator . && docker run -
 
 Open http://localhost:8080.
 
-**Locally** (Go 1.27.4+, Node 26.13.1):
+**Locally** (Go 1.27.4+, Node 22+):
 
 ```sh
 cd frontend && npm ci && cd ..

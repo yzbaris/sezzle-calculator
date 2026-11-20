@@ -1,6 +1,6 @@
 # Prompts
 
-I used Claude Code (Claude Opus 5.5) in the terminal. I had only used Go for a few small things about two years ago, so I mostly used it as a teacher and reviewer: it refreshed the Go concepts I needed, I wrote the code, then it reviewed my code. For some parts I asked it to write code or tests, and those are marked below.
+I used Claude Code (Claude Opus 5.5) in the terminal, and Codex for a final review. I had only used Go for a few small things about two years ago, so I mostly used it as a teacher and reviewer: it refreshed the Go concepts I needed, I wrote the code, then it reviewed my code. For some parts I asked it to write code or tests, and those are marked below.
 
 These are the most important prompts, slightly reworded so they're easier to read. Short questions about Go syntax are left out.
 
@@ -13,6 +13,10 @@ These are the most important prompts, slightly reworded so they're easier to rea
 | `api` handler | me, reviewed by AI |
 | `api` tests | AI |
 | `cmd/server/main.go` | AI |
+| frontend (API client, `useCalculator` hook, components, CSS, tests) | AI, reviewed by me; calculator rules decided by me |
+| Dockerfile, Makefile | AI |
+| README | AI draft, reviewed by me |
+| validation fixes after the final review | Codex |
 
 ## 1. Plan
 
@@ -70,15 +74,31 @@ These are the most important prompts, slightly reworded so they're easier to rea
 
 **What I did:** Changed it to `GET /healthz`.
 
-## 8. Scaffolding frontend
-**Prompt:** Scaffold the frontend with Vite, React, TypeScript and Vitest, and add a dev proxy to the Go API
-
-## 9. Pre-submission review and fixes
-
-**Tool:** Codex
+## 8. Frontend
 
 **Prompts:**
-- “would review the project before sending to” followed by the full assignment brief.
-- “you fix these problems” in response to the review findings.
+- "Scaffold the frontend with Vite, React, TypeScript and Vitest, and add a dev proxy to the Go API."
+- "Write a typed API client for POST /api/v1/calculate that throws an error with the code and message from the API."
+- "You write the calculator hook, I'll review it." I gave it the rules first (below).
+- "You draft the components, I'll review them."
 
-**Result:** Codex reviewed the repository against the assignment, ran the checks, and implemented the API validation and calculator input fixes with regression tests. It also updated the setup and coverage documentation.
+**What I decided:** The calculator rules: a leading 0 is replaced, only one decimal point, a second operator replaces the first, after a result a digit starts a new number, after an error a digit starts fresh. I first wanted to block chaining (`2 + 3 ×`) and show an error for `5 + =`. After discussing it I allowed chaining and made `=` do nothing instead, because that's what users expect from a phone calculator.
+
+**Result:** API client, `useCalculator` hook, Display/Keypad/Calculator components with keyboard support, and tests. While writing the hook it needed a second flag (`waitingForOperand`) next to `overwrite`, so that `5 + 9 √ =` still works.
+
+## 9. Docker, Makefile and README
+
+**Prompts:**
+- "Dockerfile and Makefile."
+- "You write the README but keep it short, don't forget the essentials."
+
+**Result:** A multi-stage Dockerfile that runs the API and the built frontend in one container, a Makefile (`test`, `coverage`, `lint`, `dev`, `docker-run`), and the README.
+
+
+## 10. Final review with Codex
+
+**Prompts:**
+- (pasted the assignment) "Review the project against this assignment before I submit it."
+- "Fix these problems." (after the review findings)
+
+**Result:** Codex reviewed the repository, ran the checks, and fixed input validation: `null` operands were decoded as `0`, a `null` body and trailing data after the JSON object were accepted, and √/% ran while waiting for the second number. It added regression tests for each and updated the README.
