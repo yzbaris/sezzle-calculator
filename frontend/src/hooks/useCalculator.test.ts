@@ -217,6 +217,16 @@ describe('unary operations', () => {
     expect(c.display()).toBe('0.5')
   })
 
+  test('ignores unary operations while waiting for the second operand', async () => {
+    const c = setup()
+    c.digits('9')
+    await c.op('add')
+    await c.unary('sqrt')
+    await c.equals()
+    expect(c.display()).toBe('9')
+    expect(calculateMock).not.toHaveBeenCalled()
+  })
+
   test('works on the second operand: 5 + 9 √ = 8', async () => {
     const c = setup()
     c.digits('5')

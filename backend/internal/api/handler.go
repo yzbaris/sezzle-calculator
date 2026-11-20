@@ -4,14 +4,15 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 
 	"github.com/yzbaris/sezzle-calculator/backend/internal/calc"
 )
 
 type calculateRequest struct {
-	Operation string    `json:"operation"`
-	Operands  []float64 `json:"operands"`
+	Operation string     `json:"operation"`
+	Operands  []*float64 `json:"operands"`
 }
 
 type calculateResponse struct {
@@ -39,13 +40,31 @@ func handleCalculate(w http.ResponseWriter, r *http.Request) {
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
 
-	var req calculateRequest
+	var req *calculateRequest
 	if err := dec.Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid JSON body "+err.Error())
 		return
 	}
 
-	result, err := calc.Calculate(req.Operation, req.Operands)
+	if req == nil {
+		writeError(w, http.StatusBadRequest, "INVALID_JSON", "expected a JSON object")
+		return
+	}
+	if err := dec.Decode(new(json.RawMessage)); err != io.EOF {
+		writeError(w, http.StatusBadRequest, "INVALID_JSON", "expected exactly one JSON object within the body size limit")
+		return
+	}
+
+	operands := make([]float64, len(req.Operands))
+	for i, operand := range req.Operands {
+		if operand == nil {
+			writeError(w, http.StatusBadRequest, "INVALID_JSON", "operands must be numbers")
+			return
+		}
+		operands[i] = *operand
+	}
+
+	result, err := calc.Calculate(req.Operation, operands)
 
 	if err != nil {
 		switch {

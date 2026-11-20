@@ -30,6 +30,12 @@ func TestCalculateEndpoint(t *testing.T) {
 		{"empty body", ``, http.StatusBadRequest, 0, "INVALID_JSON"},
 		{"unknown field", `{"operation":"add","operands":[1,2],"x":1}`, http.StatusBadRequest, 0, "INVALID_JSON"},
 		{"operand is a string", `{"operation":"add","operands":["1",2]}`, http.StatusBadRequest, 0, "INVALID_JSON"},
+		{"operand is null", `{"operation":"add","operands":[null,2]}`, http.StatusBadRequest, 0, "INVALID_JSON"},
+		{"body is null", `null`, http.StatusBadRequest, 0, "INVALID_JSON"},
+		{"trailing text", `{"operation":"add","operands":[1,2]} trailing`, http.StatusBadRequest, 0, "INVALID_JSON"},
+		{"second JSON value", `{"operation":"add","operands":[1,2]} {}`, http.StatusBadRequest, 0, "INVALID_JSON"},
+		{"trailing whitespace", "{\"operation\":\"add\",\"operands\":[1,2]} \n", http.StatusOK, 3, ""},
+		{"oversized trailing whitespace", `{"operation":"add","operands":[1,2]}` + strings.Repeat(" ", 1<<20), http.StatusBadRequest, 0, "INVALID_JSON"},
 		{"operands is not a list", `{"operation":"add","operands":5}`, http.StatusBadRequest, 0, "INVALID_JSON"},
 		{"body too large", tooLarge, http.StatusBadRequest, 0, "INVALID_JSON"},
 

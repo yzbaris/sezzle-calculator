@@ -131,7 +131,7 @@ export function useCalculator() {
   }
 
   async function applyUnary(op: UnaryOperation) {
-    if (state.loading || state.error) return
+    if (state.loading || state.error || state.waitingForOperand) return
 
     await request(op, [Number(state.display)], (result) => ({
       display: formatResult(result),

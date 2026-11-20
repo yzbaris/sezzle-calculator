@@ -71,5 +71,14 @@ These are the most important prompts, slightly reworded so they're easier to rea
 **What I did:** Changed it to `GET /healthz`.
 
 ## 8. Scaffolding frontend
-**Prompt:**: Scaffold the frontend with Vite, React, TypeScript and Vitest, and add a dev proxy to the Go API
+**Prompt:** Scaffold the frontend with Vite, React, TypeScript and Vitest, and add a dev proxy to the Go API
 
+## 9. Pre-submission review and fixes
+
+**Tool:** Codex
+
+**Prompts:**
+- “would review the project before sending to” followed by the full assignment brief.
+- “you fix these problems” in response to the review findings.
+
+**Result:** Codex reviewed the repository against the assignment, ran the checks, and implemented the API validation and calculator input fixes with regression tests. It also updated the setup and coverage documentation.

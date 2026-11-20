@@ -12,10 +12,10 @@ make docker-run        # or: docker build -t sezzle-calculator . && docker run -
 
 Open http://localhost:8080.
 
-**Locally** (Go 1.27+, Node 22+):
+**Locally** (Go 1.27.4+, Node 26.13.1):
 
 ```sh
-cd frontend && npm install && cd ..
+cd frontend && npm ci && cd ..
 make dev               # API on :8080, frontend on http://localhost:5173
 ```
 
@@ -32,7 +32,8 @@ make lint              # gofmt, go vet, tsc, oxlint
 | Part | Coverage |
 |---|---|
 | `backend/internal/calc` | 100% |
-| `backend/internal/api` | 97% |
+| `backend/internal/api` | 97.6% |
+| Backend overall (statements) | 80.0% |
 | frontend (lines) | 93% |
 
 ## API
@@ -82,7 +83,7 @@ curl -X POST localhost:8080/api/v1/calculate -d '{"operation":"div","operands":[
 - Percent converts a number to a fraction: 50 % → 0.5.
 - No parentheses or operator precedence. It works like a simple phone calculator: `2 + 3 × 4 =` gives 20.
 - Operations can be chained: `2 + 3 ×` shows 5 and waits for the next number.
-- Pressing two operators in a row keeps the last one. `=` without a second number does nothing.
+- Pressing two operators in a row keeps the last one. Until you enter the second number, `=`, square root, and percent do nothing.
 - After a result, a digit starts a new number and an operator continues from the result.
 - After an error, a digit starts fresh and operators are ignored. `C` resets everything.
 - Results are rounded to 12 significant digits for display, so `0.1 + 0.2` shows `0.3`.
@@ -97,4 +98,4 @@ curl -X POST localhost:8080/api/v1/calculate -d '{"operation":"div","operands":[
 
 ## Use of AI
 
-I used Claude Code. The prompts, and what I changed after each one, are in [PROMPTS.md](PROMPTS.md).
+I used Claude Code and Codex. The prompts and how I used them are in [PROMPTS.md](PROMPTS.md).
