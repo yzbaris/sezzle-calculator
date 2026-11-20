@@ -17,7 +17,7 @@ function fakeBackend(op: string, [a, b]: number[]): Promise<number> {
     case 'sub': return Promise.resolve(a - b)
     case 'mult': return Promise.resolve(a * b)
     case 'div':
-      return b === 0 ? Promise.reject(new ApiError('DIVISION_BY_ZERO', 'divided by zero')) : Promise.resolve(a / b)
+      return b === 0 ? Promise.reject(new ApiError('DIVISION_BY_ZERO', 'division by zero')) : Promise.resolve(a / b)
     case 'exp': return Promise.resolve(a ** b)
     case 'sqrt': return Promise.resolve(Math.sqrt(a))
     case 'perc': return Promise.resolve(a / 100)
@@ -250,7 +250,7 @@ describe('errors', () => {
 
   test('shows the API error message', async () => {
     const c = await divideByZero()
-    expect(c.state().error).toBe('divided by zero')
+    expect(c.state().error).toBe('division by zero')
     expect(c.state().loading).toBe(false)
   })
 
@@ -266,7 +266,7 @@ describe('errors', () => {
     const c = await divideByZero()
     await c.op('add')
     await c.unary('sqrt')
-    expect(c.state().error).toBe('divided by zero')
+    expect(c.state().error).toBe('division by zero')
     expect(calculateMock).toHaveBeenCalledTimes(1)
   })
 

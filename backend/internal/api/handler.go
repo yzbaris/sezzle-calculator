@@ -1,4 +1,4 @@
-// Package api exposes the calculator over HTTP
+// Package api exposes the calculator over HTTP.
 package api
 
 import (
@@ -28,6 +28,7 @@ type errorMessage struct {
 	Message string `json:"message"`
 }
 
+// NewRouter returns the HTTP handler with all API routes.
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/v1/calculate", handleCalculate)
@@ -68,9 +69,9 @@ func handleCalculate(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		switch {
-		case errors.Is(err, calc.ErrUnkownOperation):
+		case errors.Is(err, calc.ErrUnknownOperation):
 			writeError(w, http.StatusUnprocessableEntity, "UNKNOWN_OPERATION", err.Error())
-		case errors.Is(err, calc.ErrUnkownOperandCount):
+		case errors.Is(err, calc.ErrInvalidOperandCount):
 			writeError(w, http.StatusUnprocessableEntity, "INVALID_OPERAND_COUNT", err.Error())
 		case errors.Is(err, calc.ErrDivisionByZero):
 			writeError(w, http.StatusUnprocessableEntity, "DIVISION_BY_ZERO", err.Error())

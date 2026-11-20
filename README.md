@@ -48,7 +48,7 @@ curl -X POST localhost:8080/api/v1/calculate -d '{"operation":"sqrt","operands":
 # 200 {"result":3}
 
 curl -X POST localhost:8080/api/v1/calculate -d '{"operation":"div","operands":[10,0]}'
-# 422 {"error":{"code":"DIVISION_BY_ZERO","message":"divided by zero"}}
+# 422 {"error":{"code":"DIVISION_BY_ZERO","message":"division by zero"}}
 ```
 
 | Operation | Operands | Result |
@@ -71,7 +71,7 @@ curl -X POST localhost:8080/api/v1/calculate -d '{"operation":"div","operands":[
 ## Design decisions
 
 - **Standard library only in Go.** `net/http` routing (Go 1.22+) was enough for two routes, so no framework.
-- **`calc` package has no HTTP code.** All operations are in a registry (`map[string]CalcOperation`). Adding an operation means adding one entry and its tests, without a new route. The HTTP layer only decodes JSON, calls `calc.Calculate` and maps errors to status codes.
+- **`calc` package has no HTTP code.** All operations are in a registry (`map[string]operation`). Adding an operation means adding one entry and its tests, without a new route. The HTTP layer only decodes JSON, calls `calc.Calculate` and maps errors to status codes.
 - **400 vs 422.** 400 means the request can't be read. 422 means it can be read but can't be calculated.
 - **One error format** (`{"error": {"code", "message"}}`), so the frontend can check one field and show the message.
 - **float64.** Simple and enough for a calculator. Results that can't be represented (NaN, ±Inf) are returned as errors instead of invalid JSON. For money I would use a decimal type.

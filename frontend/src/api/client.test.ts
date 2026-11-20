@@ -27,12 +27,12 @@ describe('calculate', () => {
   })
 
   test('throws an ApiError with the code and message from the API', async () => {
-    mockFetch(422, { error: { code: 'DIVISION_BY_ZERO', message: 'divided by zero' } })
+    mockFetch(422, { error: { code: 'DIVISION_BY_ZERO', message: 'division by zero' } })
 
     const error = await calculate('div', [10, 0]).catch((e: unknown) => e)
 
     expect(error).toBeInstanceOf(ApiError)
-    expect(error).toMatchObject({ code: 'DIVISION_BY_ZERO', message: 'divided by zero' })
+    expect(error).toMatchObject({ code: 'DIVISION_BY_ZERO', message: 'division by zero' })
   })
 
   test('throws NETWORK_ERROR when the server is unreachable', async () => {

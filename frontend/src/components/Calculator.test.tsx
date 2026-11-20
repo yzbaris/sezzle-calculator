@@ -57,7 +57,7 @@ describe('Calculator', () => {
   })
 
   test('shows the API error message', async () => {
-    calculateMock.mockRejectedValueOnce(new ApiError('DIVISION_BY_ZERO', 'divided by zero'))
+    calculateMock.mockRejectedValueOnce(new ApiError('DIVISION_BY_ZERO', 'division by zero'))
     const user = userEvent.setup()
     render(<Calculator />)
 
@@ -66,7 +66,7 @@ describe('Calculator', () => {
     await press(user, '0')
     await press(user, 'equals')
 
-    expect(display()).toHaveTextContent('divided by zero')
+    expect(display()).toHaveTextContent('division by zero')
   })
 
   test('applies square root right away', async () => {

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestCalcOperation(t *testing.T) {
+func TestCalculate(t *testing.T) {
 	tests := []struct {
 		name          string
 		op            string
@@ -24,15 +24,15 @@ func TestCalcOperation(t *testing.T) {
 		{"square root", "sqrt", []float64{9}, 3, nil},
 
 		// unknown operation
-		{"unknown operation", "mod", []float64{5, 2}, 0, ErrUnkownOperation},
-		{"empty operation name", "", []float64{5, 2}, 0, ErrUnkownOperation},
-		{"operation name is case sensitive", "ADD", []float64{5, 2}, 0, ErrUnkownOperation},
+		{"unknown operation", "mod", []float64{5, 2}, 0, ErrUnknownOperation},
+		{"empty operation name", "", []float64{5, 2}, 0, ErrUnknownOperation},
+		{"operation name is case sensitive", "ADD", []float64{5, 2}, 0, ErrUnknownOperation},
 
 		// wrong number of operands
-		{"add with one operand", "add", []float64{5}, 0, ErrUnkownOperandCount},
-		{"add with three operands", "add", []float64{1, 2, 3}, 0, ErrUnkownOperandCount},
-		{"add with no operands", "add", nil, 0, ErrUnkownOperandCount},
-		{"sqrt with two operands", "sqrt", []float64{9, 4}, 0, ErrUnkownOperandCount},
+		{"add with one operand", "add", []float64{5}, 0, ErrInvalidOperandCount},
+		{"add with three operands", "add", []float64{1, 2, 3}, 0, ErrInvalidOperandCount},
+		{"add with no operands", "add", nil, 0, ErrInvalidOperandCount},
+		{"sqrt with two operands", "sqrt", []float64{9, 4}, 0, ErrInvalidOperandCount},
 
 		// errors from the operation itself are passed through
 		{"div by zero", "div", []float64{5, 0}, 0, ErrDivisionByZero},
