@@ -1,5 +1,12 @@
+import { Calculator } from './components/Calculator'
+
 function App() {
-  return <h1>Calculator</h1>
+  return (
+    <main className="app">
+      <h1 className="app__title">Calculator</h1>
+      <Calculator />
+    </main>
+  )
 }
 
 export default App
