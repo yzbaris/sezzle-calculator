@@ -14,6 +14,21 @@ import (
 	"github.com/yzbaris/sezzle-calculator/backend/internal/api"
 )
 
+// newHandler returns the API router. If staticDir is set (as in the Docker image),
+// it also serves the built frontend from that folder, so everything runs on one port.
+func newHandler(staticDir string) http.Handler {
+	router := api.NewRouter()
+	if staticDir == "" {
+		return router
+	}
+
+	mux := http.NewServeMux()
+	mux.Handle("/api/", router)
+	mux.Handle("/healthz", router)
+	mux.Handle("/", http.FileServer(http.Dir(staticDir)))
+	return mux
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -22,7 +37,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              ":" + port,
-		Handler:           api.NewRouter(),
+		Handler:           newHandler(os.Getenv("STATIC_DIR")),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
