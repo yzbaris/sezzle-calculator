@@ -2,24 +2,40 @@
 
 A simple full-stack calculator built with React, TypeScript and Go as part of the Sezzle technical assessment. The frontend sends every calculation to a Go REST API.
 
-## Run it
+## Setup
 
-**With Docker** (only Docker needed):
+Requirements: Go 1.27.4+ and Node 22+, or only Docker.
 
 ```sh
-make docker-run        # or: docker build -t sezzle-calculator . && docker run --rm -p 8080:8080 sezzle-calculator
+git clone https://github.com/yzbaris/sezzle-calculator.git
+cd sezzle-calculator/frontend && npm ci
+```
+
+The backend uses only the Go standard library, so it has no dependencies to install.
+
+## How to run
+
+**Backend** (API on http://localhost:8080):
+
+```sh
+cd backend && go run ./cmd/server        # or: make run-backend
+```
+
+**Frontend** (in a second terminal, http://localhost:5173):
+
+```sh
+cd frontend && npm run dev               # or: make run-frontend
+```
+
+In development, Vite forwards `/api` to the Go server on :8080, so no CORS setup is needed. To start both at once: `make dev`.
+
+**With Docker** (frontend and backend in one container):
+
+```sh
+docker build -t sezzle-calculator . && docker run --rm -p 8080:8080 sezzle-calculator   # or: make docker-run
 ```
 
 Open http://localhost:8080.
-
-**Locally** (Go 1.27.4+, Node 22+):
-
-```sh
-cd frontend && npm ci && cd ..
-make dev               # API on :8080, frontend on http://localhost:5173
-```
-
-Or in two terminals: `make run-backend` and `make run-frontend`. In development, Vite forwards `/api` to the Go server, so no CORS setup is needed.
 
 ## Tests and coverage
 
